@@ -1,0 +1,19 @@
+{
+    "name": "artisan-cloud/service-maker",
+    "description": "This package is a tool to auto make service structure",
+    "authors": [
+        {
+            "name": "michael hu",
+            "email": "hbj148@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "ArtisanCloud\\ServiceMaker\\": "src"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2"
+    }
+}
