@@ -1,6 +1,8 @@
 {
     "name": "artisan-cloud/service-maker",
     "description": "This package is a tool to auto make service structure",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "michael hu",
