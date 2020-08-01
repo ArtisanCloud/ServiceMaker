@@ -204,7 +204,7 @@ class ServiceMakerCommand extends Command
     {
         return $this->strServicePath
             . DIRECTORY_SEPARATOR . self::FOLDER_PROVIDERS
-            . DIRECTORY_SEPARATOR . "{$this->strServiceName}ServiceProvider.php";
+            . DIRECTORY_SEPARATOR . "{$this->strServiceName}Provider.php";
     }
 
     protected function getServiceFacadeFile(): string
