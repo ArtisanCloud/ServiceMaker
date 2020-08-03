@@ -14,3 +14,8 @@ The Skeleton looks like this:
     * ./Drivers
     * ./Channels
     * {Object}Service.php
+
+Please run "composer require" command to include this package.
+> composer require artisan-cloud/service-maker --dev
+
+we recommend using "--dev" as your development tool.
