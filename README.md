@@ -1,6 +1,8 @@
-### Service Maker is a convenient tool to quickly generate your service folder.
+### "Service Maker" is a convenient tool to quickly generate your service folder.
+#### When you meet the scenario that you want to have a service folder including all code in business logic boundary.
+Artisan-Cloud team develop this package for the usage above.
 
-The Skeleton looks like this:
+The Skeleton of folder generated from "Service Maker" looks like this:
 
 * app/Services/{Object}Service
     * ./Contracts
