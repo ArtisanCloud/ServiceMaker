@@ -35,6 +35,8 @@ class ServiceMakerCommand extends Command
     const FOLDER_FACADE = 'Facades';
     const FOLDER_MODELS = 'Models';
     const FOLDER_DATABASES = 'Databases';
+    const FOLDER_FACTORY = 'Factory';
+    const FOLDER_MIGRATION = 'Migration';
     const FOLDER_DRIVERS = 'Drivers';
     const FOLDER_CHANNELS = 'Channels';
     const ARRAY_FOLDER = [
@@ -42,7 +44,10 @@ class ServiceMakerCommand extends Command
         self::FOLDER_PROVIDERS,
         self::FOLDER_FACADE,
         self::FOLDER_MODELS,
-        self::FOLDER_DATABASES,
+        self::FOLDER_DATABASES => [
+            self::FOLDER_FACTORY,
+            self::FOLDER_MIGRATION
+        ],
         self::FOLDER_DRIVERS,
         self::FOLDER_CHANNELS,
     ];
@@ -70,9 +75,9 @@ class ServiceMakerCommand extends Command
 //        dd($this->options());
 
         $this->strServiceName = $this->formatServiceName($this->argument('serviceName'));
-        $arraySubFolder = ServiceMakerCommand::ARRAY_FOLDER;
-        $this->strServicePath = $this->createServiceSkeleton($this->strServiceName, $arraySubFolder, $this->option('path'));
-        $this->strServiceNamespace = $this->getNameSpace($this->strServiceName, $this->option('path'));
+        $arraySubFolders = ServiceMakerCommand::ARRAY_FOLDER;
+        $this->strServicePath = $this->createServiceSkeleton($this->strServiceName, $arraySubFolders, $this->option('path'));
+        $this->strServiceNamespace = $this->getServiceNameSpace($this->strServiceName, $this->option('path'));
 
         $this->generateContract();
         $this->generateService();

@@ -18,27 +18,19 @@ trait ServiceMakerHelper
         return $strServiceName;
     }
 
-    public function createServiceSkeleton(string $strServiceName, array $arraySubFolder, string $customPath = null): string
+    public function createServiceSkeleton(string $strServiceName, array $arraySubFolders, string $customPath = null): string
     {
         // pre-setup service folder parent location
-        if (isset($customPath)) {
-            $strServiceFolder = $customPath . DIRECTORY_SEPARATOR . $strServiceName;
-        } else {
-            $strServiceFolder = $this->getDefaultServiceFolder() . DIRECTORY_SEPARATOR . $strServiceName;
-        }
+        $strServicePath = $this->getServicePath($strServiceName, $customPath);
 
         // create service folder
-        $bResult = $this->createServiceFolder($strServiceFolder);
-        if(!$bResult)    exit(-1);
+        $bResult = $this->createServiceFolder($strServicePath);
+        if (!$bResult) exit(-1);
 
         // create service subfolders
-        foreach ($arraySubFolder as $strFolderName) {
-            $strFolder = $strServiceFolder.DIRECTORY_SEPARATOR.$strFolderName;
-            $bResult = $this->createServiceFolder($strFolder);
-            if(!$bResult)  exit(-1);
-        }
+        $this->createServiceSubFolder($strServicePath, $arraySubFolders);
 
-        return $strServiceFolder;
+        return $strServicePath;
     }
 
     public function createServiceFolder(string $strServicePath): bool
@@ -58,32 +50,69 @@ trait ServiceMakerHelper
         return $bResult;
     }
 
-
-    public function getNameSpace(string $strServiceName, string $strCustomizedPath = null): string
+    public function createServiceSubFolder($strCurrentFolder, array $arrayFolders): bool
     {
+        $bResult = false;
+        foreach ($arrayFolders as $key => $strFolderName) {
+            $arraySubFolders = null;
+            if (is_array($strFolderName)) {
+                // this folder has sub folders too.
+                $arraySubFolders = $strFolderName;
 
-        if (is_null($strCustomizedPath)) {
-            return $this->getDefaultServiceNamespace();
+                // use key as this folder name, defined in const array.
+                $strFolderName = $key;
+            }
+
+            $strThisFolder = $strCurrentFolder . DIRECTORY_SEPARATOR . $strFolderName;
+            $bResult = $this->createServiceFolder($strThisFolder);
+            if (!$bResult) exit(-1);
+            // recursively to create sub folders
+            if (!is_null($arraySubFolders)) {
+                $bResult = $this->createServiceSubFolder($strThisFolder, $arraySubFolders);
+            }
         }
 
-
-        $arrayArrayDir = File::directories();
-        dd($arrayArrayDir);
-        $namespace = new Namespace_();
-        $namespace->addStmts($arrayArrayDir);
-
-        $strNamespace = $namespace->getNode();
-        return $strNamespace;
+        return $bResult;
     }
 
-    protected function getDefaultServiceFolder()
+
+    public function getServiceNameSpace(string $strServiceName, string $strCustomizedPath = null): string
+    {
+        if (is_null($strCustomizedPath)) {
+            return $this->getDefaultServiceNamespace();
+        } else {
+            return $this->getCustomServiceNamespace($strCustomizedPath);
+        }
+    }
+
+    protected function getServicePath(string $strServiceName, string $customPath = null): string
+    {
+        if (isset($customPath)) {
+            $strServicePath = $this->getCustomServicePath($customPath) . DIRECTORY_SEPARATOR . $strServiceName;
+        } else {
+            $strServicePath = $this->getDefaultServicePath() . DIRECTORY_SEPARATOR . $strServiceName;
+        }
+        return $strServicePath;
+    }
+
+    protected function getCustomServicePath(string $strCustomizedPath): string
+    {
+        return app_path($strCustomizedPath);
+    }
+
+    protected function getDefaultServicePath(): string
     {
         return app_path('Services');
     }
 
-    protected function getDefaultServiceNamespace()
+    protected function getDefaultServiceNamespace(): string
     {
         return 'App\Services';
+    }
+
+    protected function getCustomServiceNamespace(string $strCustomPath): string
+    {
+        return 'App' . '\\' . str_replace('/', '\\', $strCustomPath);
     }
 
     protected function getStub(string $class): string
