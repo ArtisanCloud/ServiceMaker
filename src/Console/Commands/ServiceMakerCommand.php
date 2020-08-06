@@ -30,26 +30,33 @@ class ServiceMakerCommand extends Command
     public string $strServicePath;
     public string $strServiceNamespace;
 
+    const FOLDER_DATABASE = 'databases';
+    const FOLDER_RESOURCE = 'resources';
+    const FOLDER_SOURCE = 'src';
     const FOLDER_CONTRACT = 'Contracts';
-    const FOLDER_PROVIDERS = 'Providers';
+    const FOLDER_PROVIDER = 'Providers';
     const FOLDER_FACADE = 'Facades';
-    const FOLDER_MODELS = 'Models';
-    const FOLDER_DATABASES = 'Databases';
+    const FOLDER_MODEL = 'Models';
     const FOLDER_FACTORY = 'Factory';
     const FOLDER_MIGRATION = 'Migration';
-    const FOLDER_DRIVERS = 'Drivers';
-    const FOLDER_CHANNELS = 'Channels';
+    const FOLDER_DRIVER = 'Drivers';
+    const FOLDER_CHANNEL = 'Channels';
+    const FOLDER_CONFIG = 'config';
     const ARRAY_FOLDER = [
-        self::FOLDER_CONTRACT,
-        self::FOLDER_PROVIDERS,
-        self::FOLDER_FACADE,
-        self::FOLDER_MODELS,
-        self::FOLDER_DATABASES => [
+        self::FOLDER_CONFIG,
+        self::FOLDER_RESOURCE,
+        self::FOLDER_DATABASE => [
             self::FOLDER_FACTORY,
             self::FOLDER_MIGRATION
         ],
-        self::FOLDER_DRIVERS,
-        self::FOLDER_CHANNELS,
+        self::FOLDER_SOURCE => [
+            self::FOLDER_CONTRACT,
+            self::FOLDER_PROVIDER,
+            self::FOLDER_FACADE,
+            self::FOLDER_MODEL,
+            self::FOLDER_DRIVER,
+            self::FOLDER_CHANNEL,
+        ],
     ];
 
 
@@ -195,6 +202,7 @@ class ServiceMakerCommand extends Command
     protected function getServiceContractFile(): string
     {
         return $this->strServicePath
+            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . self::FOLDER_CONTRACT
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}Contract.php";
     }
@@ -202,19 +210,22 @@ class ServiceMakerCommand extends Command
     protected function getServiceFile(): string
     {
         return $this->strServicePath
+            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}.php";
     }
 
     protected function getServiceProviderFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR . self::FOLDER_PROVIDERS
+            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
+            . DIRECTORY_SEPARATOR . self::FOLDER_PROVIDER
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}Provider.php";
     }
 
     protected function getServiceFacadeFile(): string
     {
         return $this->strServicePath
+            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . self::FOLDER_FACADE
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}.php";
     }
