@@ -105,7 +105,7 @@ trait ServiceMakerHelper
 
     protected function getCustomServicePath(string $strCustomizedPath): string
     {
-        return app_path($strCustomizedPath);
+        return base_path($strCustomizedPath);
     }
 
     protected function getDefaultServicePath(): string
