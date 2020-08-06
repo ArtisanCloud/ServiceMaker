@@ -21,38 +21,42 @@ trait ServiceMakerHelper
     public function createServiceSkeleton(string $strServiceName, array $arraySubFolders, string $customPath = null): string
     {
         // pre-setup service folder parent location
-        $strServicePath = $this->getServicePath($strServiceName, $customPath);
+        $strServiceFolder = $this->getServicePath($strServiceName, $customPath);
 
         // create service folder
-        $bResult = $this->createServiceFolder($strServicePath);
+        $bResult = $this->createServiceFolder($strServiceFolder);
         if (!$bResult) exit(-1);
 
         // create service subfolders
-        $this->createServiceSubFolder($strServicePath, $arraySubFolders);
+        $this->createServiceSubFolder($strServiceFolder, $arraySubFolders);
 
-        return $strServicePath;
+        return $strServiceFolder;
     }
 
-    public function createServiceFolder(string $strServicePath): bool
+    public function createServiceFolder(string $strServiceFolder): bool
     {
-        $bResult = File::exists($strServicePath);
+        $bResult = File::exists($strServiceFolder);
         // create service path
         if (!$bResult) {
-            $this->warn("ready to create folder:{$strServicePath}");
-            $bResult = File::makeDirectory($strServicePath, 0755, true);
+            $this->warn("ready to create folder:{$strServiceFolder}");
+            $bResult = File::makeDirectory($strServiceFolder, 0755, true);
             if ($bResult) {
-                $this->info("success to creat folder:{$strServicePath}");
+                $this->info("success to creat folder:{$strServiceFolder}");
             } else {
-                $this->error("failed to creat folder:{$strServicePath}");
+                $this->error("failed to creat folder:{$strServiceFolder}");
             }
         }
 
         return $bResult;
     }
 
-    public function createServiceSubFolder($strCurrentFolder, array $arrayFolders): bool
+    public function createServiceSubFolder(string $strCurrentFolder, array $arrayFolders): bool
     {
         $bResult = false;
+
+        // load config and set arrayRequiredFolders
+        $arrayConfig = $this->loadConfigFile();
+        $arrayRequiredFolders = $arrayConfig['skelegon'];
         foreach ($arrayFolders as $key => $strFolderName) {
             $arraySubFolders = null;
             if (is_array($strFolderName)) {
@@ -63,12 +67,16 @@ trait ServiceMakerHelper
                 $strFolderName = $key;
             }
 
-            $strThisFolder = $strCurrentFolder . DIRECTORY_SEPARATOR . $strFolderName;
-            $bResult = $this->createServiceFolder($strThisFolder);
-            if (!$bResult) exit(-1);
-            // recursively to create sub folders
-            if (!is_null($arraySubFolders)) {
-                $bResult = $this->createServiceSubFolder($strThisFolder, $arraySubFolders);
+            // check if user want to generate this folder in config file
+            $bRequireFoler = $arrayRequiredFolders[$strFolderName] ?? false;
+            if ($bRequireFoler) {
+                $strThisFolder = $strCurrentFolder . DIRECTORY_SEPARATOR . $strFolderName;
+                $bResult = $this->createServiceFolder($strThisFolder);
+                if (!$bResult) exit(-1);
+                // recursively to create sub folders
+                if (!is_null($arraySubFolders)) {
+                    $bResult = $this->createServiceSubFolder($strThisFolder, $arraySubFolders);
+                }
             }
         }
 
@@ -120,6 +128,25 @@ trait ServiceMakerHelper
         return File::get(__DIR__ . "/../Console/stubs/{$class}.stub");
     }
 
+    protected function getDefaultConfigFile()
+    {
+        return __DIR__.'/../../'.self::FOLDER_CONFIG.'/servicemaker.php';
+    }
+
+    protected function loadConfigFile()
+    {
+        $strPublishConfigFile = config_path('servicemaker.php');
+        if(!File::exists($strPublishConfigFile)){
+            $strDefaultConfigFile = $this->getDefaultConfigFile();
+            $arrayPublishConfig = require $strDefaultConfigFile;
+
+            return $arrayPublishConfig;
+        }else{
+            $arrayPublishConfig = config('servicemaker');
+        }
+        return $arrayPublishConfig;
+    }
+
     public function saveServiceTemplateToFile(string $serviceTemplate, string $filePath, string $strTemplateName): bool
     {
         $bResult = false;
@@ -128,12 +155,21 @@ trait ServiceMakerHelper
             $this->error("{$filePath} already exist!");
             exit(-1);
         } else {
-            $bResult = File::put($filePath, $serviceTemplate);
-            if ($bResult) {
-                $this->info("generated {$strTemplateName} at {$filePath}.");
-            } else {
-                $this->error("Failed to generate {$strTemplateName} at {$filePath}.");
+
+            $strFileDirectory = dirname($filePath);
+            if($this->createServiceFolder($strFileDirectory)){
+                $bResult = File::put($filePath, $serviceTemplate);
+                if ($bResult) {
+                    $this->info("generated {$strTemplateName} at {$filePath}.");
+                } else {
+                    $this->error("Failed to generate {$strTemplateName} at {$filePath}.");
+                }
+            }else{
+                $this->error("{$filePath}parent folder not exist!");
+
             }
+
+
         }
 
         return $bResult;

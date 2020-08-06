@@ -18,9 +18,17 @@ class ServiceMakerServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             // publish config file
 
-            $this->commands([
-                ServiceMakerCommand::class,
-            ]);
+            if ($this->app->runningInConsole()) {
+
+                $this->publishes([
+                    __DIR__ . '/../'.ServiceMakerCommand::FOLDER_CONFIG.'/servicemaker.php' => "/../" . config_path('servicemaker.php'),
+                ], 'Service-Maker');
+
+                $this->commands([
+                    ServiceMakerCommand::class,
+                ]);
+            }
+
         }
     }
 }

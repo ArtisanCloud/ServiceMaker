@@ -30,34 +30,24 @@ class ServiceMakerCommand extends Command
     public string $strServicePath;
     public string $strServiceNamespace;
 
-    const FOLDER_DATABASE = 'databases';
+    const FOLDER_CONFIG = 'config';
     const FOLDER_RESOURCE = 'resources';
+    const FOLDER_DATABASE = 'databases';
+    const FOLDER_FACTORY = 'factories';
+    const FOLDER_MIGRATION = 'migrations';
+    const FOLDER_SEED = 'seeds';
     const FOLDER_SOURCE = 'src';
+    const FOLDER_CONSOLE = 'Console';
+    const FOLDER_EXCEPTION = 'Exceptions';
+    const FOLDER_HTTP = 'Http';
+    const FOLDER_CONTROLLER = 'Controllers';
+    const FOLDER_MIDDLEWARE = 'Middleware';
     const FOLDER_CONTRACT = 'Contracts';
     const FOLDER_PROVIDER = 'Providers';
     const FOLDER_FACADE = 'Facades';
     const FOLDER_MODEL = 'Models';
-    const FOLDER_FACTORY = 'Factory';
-    const FOLDER_MIGRATION = 'Migration';
     const FOLDER_DRIVER = 'Drivers';
     const FOLDER_CHANNEL = 'Channels';
-    const FOLDER_CONFIG = 'config';
-    const ARRAY_FOLDER = [
-        self::FOLDER_CONFIG,
-        self::FOLDER_RESOURCE,
-        self::FOLDER_DATABASE => [
-            self::FOLDER_FACTORY,
-            self::FOLDER_MIGRATION
-        ],
-        self::FOLDER_SOURCE => [
-            self::FOLDER_CONTRACT,
-            self::FOLDER_PROVIDER,
-            self::FOLDER_FACADE,
-            self::FOLDER_MODEL,
-            self::FOLDER_DRIVER,
-            self::FOLDER_CHANNEL,
-        ],
-    ];
 
 
     /**
@@ -82,16 +72,15 @@ class ServiceMakerCommand extends Command
 //        dd($this->options());
 
         $this->strServiceName = $this->formatServiceName($this->argument('serviceName'));
-        $arraySubFolders = ServiceMakerCommand::ARRAY_FOLDER;
-        $this->strServicePath = $this->createServiceSkeleton($this->strServiceName, $arraySubFolders, $this->option('path'));
+        $this->strServicePath = $this->createServiceSkeleton($this->strServiceName, $this->getServiceSkelegon(), $this->option('path'));
         $this->strServiceNamespace = $this->getServiceNameSpace($this->strServiceName, $this->option('path'));
 
         $this->generateContract();
         $this->generateService();
         $this->generateServiceProvider();
         $this->generateFacade();
-        $this->option('model') ? null : $this->generateModel();
-        $this->option('path') ? null : $this->generateDriver();
+//        $this->option('model') ? null : $this->generateModel();
+//        $this->option('path') ? null : $this->generateDriver();
 
         return 0;
     }
@@ -202,7 +191,7 @@ class ServiceMakerCommand extends Command
     protected function getServiceContractFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
+            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . self::FOLDER_CONTRACT
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}Contract.php";
     }
@@ -210,14 +199,14 @@ class ServiceMakerCommand extends Command
     protected function getServiceFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
+            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}.php";
     }
 
     protected function getServiceProviderFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
+            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . self::FOLDER_PROVIDER
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}Provider.php";
     }
@@ -225,8 +214,35 @@ class ServiceMakerCommand extends Command
     protected function getServiceFacadeFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR. self::FOLDER_SOURCE
+            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . self::FOLDER_FACADE
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}.php";
+    }
+
+    protected function getServiceSkelegon() :array
+    {
+        return [
+            self::FOLDER_CONFIG,
+            self::FOLDER_DATABASE => [
+                self::FOLDER_FACTORY,
+                self::FOLDER_MIGRATION,
+                self::FOLDER_SEED,
+            ],
+            self::FOLDER_RESOURCE,
+            self::FOLDER_SOURCE => [
+                self::FOLDER_CONSOLE,
+                self::FOLDER_EXCEPTION,
+                self::FOLDER_HTTP => [
+                    self::FOLDER_CONTROLLER,
+                    self::FOLDER_MIDDLEWARE,
+                ],
+                self::FOLDER_CONTRACT,
+                self::FOLDER_PROVIDER,
+                self::FOLDER_FACADE,
+                self::FOLDER_MODEL,
+                self::FOLDER_DRIVER,
+                self::FOLDER_CHANNEL,
+            ],
+        ];
     }
 }
