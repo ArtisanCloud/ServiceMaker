@@ -101,7 +101,7 @@ trait ServiceMakerHelper
         if (is_null($strServicePath)) {
             $strServicePath = $this->getDefaultServicePath();
         }else{
-            $strServicePath = base_path($strPublishServicePath);
+            $strServicePath = base_path($strServicePath);
         }
         $strServicePath .=  DIRECTORY_SEPARATOR . $strServiceName;
 

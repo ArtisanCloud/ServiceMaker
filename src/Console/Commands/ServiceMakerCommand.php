@@ -72,8 +72,8 @@ class ServiceMakerCommand extends Command
 //        dd($this->options());
 
         $this->strServiceName = $this->formatServiceName($this->argument('serviceName'));
-        $this->strServicePath = $this->createServiceSkeleton($this->strServiceName, $this->getServiceSkelegon(), $this->option('path'));
-        $this->strServiceNamespace = $this->getServiceNameSpace($this->strServiceName, $this->option('path'));
+        $this->strServicePath = $this->createServiceSkeleton($this->strServiceName, $this->getServiceSkelegon());
+        $this->strServiceNamespace = $this->getServiceNameSpace($this->strServiceName);
 
         $this->generateContract();
         $this->generateService();
