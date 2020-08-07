@@ -137,39 +137,7 @@ return [
 ---------------------------
 Now you can run this command:
 ~~~~
- php artisan service:make ObjectService
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases/factories
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases/factories
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases/migrations
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases/migrations
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases/seeds
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/databases/seeds
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/resources
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/resources
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Console
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Console
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Http
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Http
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Contracts
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Contracts
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Providers
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Providers
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Facades
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Facades
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Models
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Models
-ready to create folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Drivers
-success to creat folder:/private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Drivers
-generated ServiceContract at /private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Contracts/ObjectServiceContract.php.
-generated Service at /private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/ObjectService.php.
-generated ServiceProvider at /private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Providers/ObjectServiceProvider.php.
-generated ServiceFacade at /private/var/www/html/PackageDevelopment/app/Services/ObjectService/src/Facades/ObjectService.php.
+$ php artisan service:make ObjectService
 ~~~~
 
 The default Service folders is located in: 
@@ -184,12 +152,13 @@ Here is the service sub folders and php files you want.
 
 ---------------------------
 
-If you want to move your service folder into other place, please override the 
-'service_path'
-'namespace'
-configure keys.
+If you want to move your service folder into other place, please override the 'service_path','namespace'configure keys.
 For example:
+
+/config/servicemaker.php
 ~~~
+<?php
+
 'service_path' => '/Services/ObjectService/src',
 'namespace' => 'ArtisanCloud\SaaSMonomer',
 ~~~
@@ -197,6 +166,7 @@ For example:
 Please make sure the namespace is conform to PSR-4
 you can autoload your customized service locaiton in composer.json like this:
 
+/composer.json
 ~~~
 "autoload-dev": {
         "psr-4": {
