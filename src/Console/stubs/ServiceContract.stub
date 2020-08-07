@@ -1,10 +1,10 @@
 <?php
 
-namespace {{serviceNamespace}}\{{serviceName}}\Contracts;
+namespace {{serviceNamespace}}\Contracts;
 
 /**
  * Interface {{serviceName}}Contract
- * @package {{serviceNamespace}}\{{serviceName}}\Contracts
+ * @package {{serviceNamespace}}\Contracts
  */
 interface {{serviceName}}Contract
 {

@@ -17,14 +17,14 @@ class ServiceMakerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'service:make {serviceName} {--M|model} {--D|driver} {--path=} ';
+    protected $signature = 'service:make {serviceName} {--M|model} {--D|driver} ';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'service:make {serviceName} --path={custom path}';
+    protected $description = 'service:make {serviceName}';
 
     public string $strServiceName;
     public string $strServicePath;

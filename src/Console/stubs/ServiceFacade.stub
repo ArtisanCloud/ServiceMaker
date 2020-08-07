@@ -1,12 +1,12 @@
 <?php
 
-namespace {{serviceNamespace}}\{{serviceName}}\Facades;
+namespace {{serviceNamespace}}\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * Class {{serviceName}}
- * @package {{serviceNamespace}}\{{serviceName}}
+ * @package {{serviceNamespace}}
  */
 class {{serviceName}} extends Facade
 {

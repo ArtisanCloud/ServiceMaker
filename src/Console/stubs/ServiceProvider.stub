@@ -1,10 +1,10 @@
 <?php
 
-namespace {{serviceNamespace}}\{{serviceName}}\Providers;
+namespace {{serviceNamespace}}\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use {{serviceNamespace}}\{{serviceName}}\Contracts\{{serviceName}}Contract;
-use {{serviceNamespace}}\{{serviceName}}\{{serviceName}};
+use {{serviceNamespace}}\Contracts\{{serviceName}}Contract;
+use {{serviceNamespace}}\{{serviceName}};
 
 /**
  * Class {{serviceName}}Provider

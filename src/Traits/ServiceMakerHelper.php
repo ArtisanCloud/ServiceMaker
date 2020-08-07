@@ -4,7 +4,6 @@ namespace ArtisanCloud\ServiceMaker\Traits;
 
 use ArtisanCloud\ServiceMaker\Console\Commands\ServiceMakerCommand;
 use Illuminate\Support\Facades\File;
-use PhpParser\Builder\Namespace_;
 
 trait ServiceMakerHelper
 {
@@ -18,10 +17,10 @@ trait ServiceMakerHelper
         return $strServiceName;
     }
 
-    public function createServiceSkeleton(string $strServiceName, array $arraySubFolders, string $customPath = null): string
+    public function createServiceSkeleton(string $strServiceName, array $arraySubFolders): string
     {
         // pre-setup service folder parent location
-        $strServiceFolder = $this->getServicePath($strServiceName, $customPath);
+        $strServiceFolder = $this->getServiceFolder($strServiceName);
 
         // create service folder
         $bResult = $this->createServiceFolder($strServiceFolder);
@@ -84,28 +83,39 @@ trait ServiceMakerHelper
     }
 
 
-    public function getServiceNameSpace(string $strServiceName, string $strCustomizedPath = null): string
+    public function getServiceNameSpace(string $strServiceName): string
     {
-        if (is_null($strCustomizedPath)) {
-            return $this->getDefaultServiceNamespace();
-        } else {
-            return $this->getCustomServiceNamespace($strCustomizedPath);
+        $strPublishNamespace = $this->getPublishedServiceNamespace();
+        // check if user use their own namespace in config file
+        if (is_null($strPublishNamespace)) {
+            // use default namespace
+            return $this->getDefaultServiceNamespace($strServiceName);
         }
+        return $strPublishNamespace;
+
     }
 
-    protected function getServicePath(string $strServiceName, string $customPath = null): string
+    protected function getServiceFolder(string $strServiceName): string
     {
-        if (isset($customPath)) {
-            $strServicePath = $this->getCustomServicePath($customPath) . DIRECTORY_SEPARATOR . $strServiceName;
-        } else {
-            $strServicePath = $this->getDefaultServicePath() . DIRECTORY_SEPARATOR . $strServiceName;
+        $strServicePath = $this->getPublishedServicePath();
+        if (is_null($strServicePath)) {
+            $strServicePath = $this->getDefaultServicePath();
+        }else{
+            $strServicePath = base_path($strPublishServicePath);
         }
+        $strServicePath .=  DIRECTORY_SEPARATOR . $strServiceName;
+
         return $strServicePath;
     }
 
-    protected function getCustomServicePath(string $strCustomizedPath): string
+    protected function getDefaultConfigFile()
     {
-        return base_path($strCustomizedPath);
+        return __DIR__ . '/../../' . self::FOLDER_CONFIG . '/servicemaker.php';
+    }
+
+    protected function getPublishedServicePath(): ?string
+    {
+        return config('servicemaker.service_path');
     }
 
     protected function getDefaultServicePath(): string
@@ -113,14 +123,15 @@ trait ServiceMakerHelper
         return app_path('Services');
     }
 
-    protected function getDefaultServiceNamespace(): string
+    protected function getPublishedServiceNamespace(): ?string
     {
-        return 'App\Services';
+        return config('servicemaker.namespace');
+
     }
 
-    protected function getCustomServiceNamespace(string $strCustomPath): string
+    protected function getDefaultServiceNamespace(string $strServiceName): string
     {
-        return 'App' . '\\' . str_replace('/', '\\', $strCustomPath);
+        return 'App\Services\\'.$strServiceName.'\src';
     }
 
     protected function getStub(string $class): string
@@ -128,21 +139,15 @@ trait ServiceMakerHelper
         return File::get(__DIR__ . "/../Console/stubs/{$class}.stub");
     }
 
-    protected function getDefaultConfigFile()
-    {
-        return __DIR__.'/../../'.self::FOLDER_CONFIG.'/servicemaker.php';
-    }
 
     protected function loadConfigFile()
     {
-        $strPublishConfigFile = config_path('servicemaker.php');
-        if(!File::exists($strPublishConfigFile)){
+        $arrayPublishConfig = config('servicemaker');
+        if (is_null($arrayPublishConfig)) {
             $strDefaultConfigFile = $this->getDefaultConfigFile();
             $arrayPublishConfig = require $strDefaultConfigFile;
 
             return $arrayPublishConfig;
-        }else{
-            $arrayPublishConfig = config('servicemaker');
         }
         return $arrayPublishConfig;
     }
@@ -157,14 +162,14 @@ trait ServiceMakerHelper
         } else {
 
             $strFileDirectory = dirname($filePath);
-            if($this->createServiceFolder($strFileDirectory)){
+            if ($this->createServiceFolder($strFileDirectory)) {
                 $bResult = File::put($filePath, $serviceTemplate);
                 if ($bResult) {
                     $this->info("generated {$strTemplateName} at {$filePath}.");
                 } else {
                     $this->error("Failed to generate {$strTemplateName} at {$filePath}.");
                 }
-            }else{
+            } else {
                 $this->error("{$filePath}parent folder not exist!");
 
             }

@@ -1,12 +1,12 @@
 <?php
 
-namespace {{serviceNamespace}}\{{serviceName}};
+namespace {{serviceNamespace}};
 
-use {{serviceNamespace}}\{{serviceName}}\Contracts\{{serviceName}}Contract;
+use {{serviceNamespace}}\Contracts\{{serviceName}}Contract;
 
 /**
  * Class {{serviceName}}
- * @package {{serviceNamespace}}\{{serviceName}}
+ * @package {{serviceNamespace}}
  */
 class {{serviceName}} implements {{serviceName}}Contract
 {

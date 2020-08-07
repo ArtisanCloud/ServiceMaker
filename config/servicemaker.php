@@ -6,7 +6,25 @@ use ArtisanCloud\ServiceMaker\Console\Commands\ServiceMakerCommand as SMSkelegon
 
 return [
 
-    // you can use this config var to turn some folders off as you need
+
+    /**
+     * Override default service path
+     * Please use relative path from project root directory,  base_path();
+     * If null, the default value app_path('Services') will return
+     */
+    'service_path' => null,
+
+    /**
+     * Override default name space
+     * Please conform the namespace to PSR-4
+     * If null, the default value "App\Services" will return
+     */
+    'namespace' => null,
+
+
+    /**
+     * you can use this config var to turn some folders off as you need
+     */
     'skelegon' => [
         // config/
         SMSkelegon::FOLDER_CONFIG => true,
