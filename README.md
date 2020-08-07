@@ -164,8 +164,7 @@ The default Service folders is located in:
 
 Here is the service sub folders and php files you want.
 
-![Image of Yaktocat]
-(https://octodex.github.com/images/yaktocat.png)
+![Image of Yaktocat](https://cdn.jsdelivr.net/gh/ArtisanCloud/PackageResource/ServiceMaker/guide-result.jpeg)
 
 ---------------------------
 
