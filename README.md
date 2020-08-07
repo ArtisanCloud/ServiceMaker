@@ -73,6 +73,21 @@ You can trigger(true/false) these folders name to customized your generate struc
 ~~~
 return [
 
+    /**
+     * Override default service path
+     * Please use relative path from project root directory,  base_path();
+     * If null, the default value app_path('Services') will return
+     */
+    'service_path' => null,
+
+    /**
+     * Override default name space
+     * Please conform the namespace to PSR-4
+     * If null, the default value "App\Services" will return
+     */
+    'namespace' => null,
+
+
     // you can use this config var to turn some folders off as you need
     'skelegon' => [
         // config/
@@ -169,14 +184,24 @@ Here is the service sub folders and php files you want.
 
 ---------------------------
 
-Also it can be customized by: 
-~~~~
- php artisan service:make ObjectService --path {your/custom/path}
-~~~~
+If you want to move your service folder into other place, please override the 
+'service_path'
+'namespace'
+configure keys.
+For example:
+~~~
+'service_path' => '/Services/ObjectService/src',
+'namespace' => 'ArtisanCloud\SaaSMonomer',
+~~~
 
-You can also replase the {Object}Service with your Service Name, like UserService.
+Please make sure the namespace is conform to PSR-4
+you can autoload your customized service locaiton in composer.json like this:
 
-
-
-
-
+~~~
+"autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/",
+            "ArtisanCloud\\ServiceMaker\\": "/Services/ObjectService/src"
+        }
+    },
+~~~
