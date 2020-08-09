@@ -4,6 +4,7 @@
 
 ## [1.0.3 (2020-08-09)](https://github.com/ArtisanCloud/ServiceMaker/releases/tag/1.0.4)
 - add option with model, generate model,migration,factory  
+- fix publish domain
 
 # Release Notes for 1.0.3
 
