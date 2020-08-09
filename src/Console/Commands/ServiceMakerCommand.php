@@ -17,7 +17,7 @@ class ServiceMakerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'service:make {serviceName} {--M|model} {--D|driver} ';
+    protected $signature = 'service:make {serviceName} {--S|simple} {--M|model} {--D|driver} ';
 
     /**
      * The console command description.

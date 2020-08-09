@@ -26,8 +26,10 @@ trait ServiceMakerHelper
         $bResult = $this->createServiceFolder($strServiceFolder);
         if (!$bResult) exit(-1);
 
-        // create service subfolders
-        $this->createServiceSubFolder($strServiceFolder, $arraySubFolders);
+        if(!$this->option('simple')){
+            // create service subfolders
+            $this->createServiceSubFolder($strServiceFolder, $arraySubFolders);
+        }
 
         return $strServiceFolder;
     }
