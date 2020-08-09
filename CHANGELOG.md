@@ -6,6 +6,7 @@
 - add option with model, generate model,migration,factory  
 - fix publish domain
 - fix provider stub
+- add global tag for publish
 
 # Release Notes for 1.0.3
 

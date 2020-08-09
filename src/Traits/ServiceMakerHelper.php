@@ -156,12 +156,14 @@ trait ServiceMakerHelper
                 "{{serviceNamespace}}",
                 "{{Model}}",
                 "{{model}}",
+                "{{Tag}}",
             ],
             [
                 $this->strServiceName,
                 $this->strServiceNamespace,
                 $this->strModel,
                 Str::lower($this->strModel),
+                config('servicemaker.publish_tag') ?? $this->strModel,
 
             ],
             $this->getStub($strTemplate)

@@ -66,6 +66,13 @@ return [
         SMSkelegon::FOLDER_DRIVER => true,
         // src/Models/Channels/
         SMSkelegon::FOLDER_CHANNEL => true,
-    ]
+    ],
+
+    /**
+     * Override default publish tag
+     * This will overwrite the package publish tag in general
+     * If null, the default value will be same as Service Name
+     */
+    'publish_tag' => null,
 ];
 
