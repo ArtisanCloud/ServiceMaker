@@ -33,13 +33,13 @@ return [
         SMSkelegon::FOLDER_RESOURCE => true,
 
         // database/
-        SMSkelegon::FOLDER_DATABASE => true,
+        SMSkelegon::FOLDER_DATABASE => false,
         // database/factories/
-        SMSkelegon::FOLDER_FACTORY => true,
+        SMSkelegon::FOLDER_FACTORY => false,
         // database/migrations/
-        SMSkelegon::FOLDER_MIGRATION => true,
+        SMSkelegon::FOLDER_MIGRATION => false,
         // database/seeds/
-        SMSkelegon::FOLDER_SEED => true,
+        SMSkelegon::FOLDER_SEED => false,
 
         // src/
         SMSkelegon::FOLDER_SOURCE => true,
@@ -61,7 +61,7 @@ return [
         // src/Facades/
         SMSkelegon::FOLDER_FACADE => true,
         // src/Models/
-        SMSkelegon::FOLDER_MODEL => true,
+        SMSkelegon::FOLDER_MODEL => false,
         // src/Models/Drivers/
         SMSkelegon::FOLDER_DRIVER => true,
         // src/Models/Channels/

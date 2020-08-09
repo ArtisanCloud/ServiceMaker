@@ -27,7 +27,7 @@ trait ServiceMakerHelper
         $bResult = $this->createServiceFolder($strServiceFolder);
         if (!$bResult) exit(-1);
 
-        if(!$this->option('simple')){
+        if (!$this->option('simple')) {
             // create service subfolders
             $this->createServiceSubFolder($strServiceFolder, $arraySubFolders);
         }
@@ -40,7 +40,7 @@ trait ServiceMakerHelper
         $bResult = File::exists($strServiceFolder);
         // create service path
         if (!$bResult) {
-            $this->warn("ready to create folder:{$strServiceFolder}");
+//            $this->warn("ready to create folder:{$strServiceFolder}");
             $bResult = File::makeDirectory($strServiceFolder, 0755, true);
             if ($bResult) {
                 $this->info("success to creat folder:{$strServiceFolder}");
@@ -88,7 +88,7 @@ trait ServiceMakerHelper
 
     public function getServiceNameSpace(string $strServiceName): string
     {
-        $strPublishNamespace = $this->getPublishedServiceNamespace();
+        $strPublishNamespace = $this->getPublishedServiceNamespace($strServiceName);
         // check if user use their own namespace in config file
         if (is_null($strPublishNamespace)) {
             // use default namespace
@@ -100,7 +100,7 @@ trait ServiceMakerHelper
 
     public function getModel(string $strServiceName): string
     {
-        $strModel = Str::of($strServiceName)->replaceLast('Service','');
+        $strModel = Str::of($strServiceName)->replaceLast('Service', '');
         return $strModel;
     }
 
@@ -109,10 +109,10 @@ trait ServiceMakerHelper
         $strServicePath = $this->getPublishedServicePath();
         if (is_null($strServicePath)) {
             $strServicePath = $this->getDefaultServicePath();
-        }else{
+        } else {
             $strServicePath = base_path($strServicePath);
         }
-        $strServicePath .=  DIRECTORY_SEPARATOR . $strServiceName;
+        $strServicePath .= DIRECTORY_SEPARATOR . $strServiceName;
 
         return $strServicePath;
     }
@@ -132,15 +132,15 @@ trait ServiceMakerHelper
         return app_path('Services');
     }
 
-    protected function getPublishedServiceNamespace(): ?string
+    protected function getPublishedServiceNamespace(string $strServiceName): ?string
     {
-        return config('servicemaker.namespace');
+        return config('servicemaker.namespace') . '\\' . $strServiceName . '\src';
 
     }
 
     protected function getDefaultServiceNamespace(string $strServiceName): string
     {
-        return 'App\Services\\'.$strServiceName.'\src';
+        return 'App\Services\\' . $strServiceName . '\src';
     }
 
     protected function getStub(string $class): string

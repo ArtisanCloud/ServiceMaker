@@ -20,6 +20,10 @@ class {{serviceName}}Provider extends ServiceProvider
     public function register()
     {
         //
+        $this->app->bind(
+            {{serviceName}}Contract::class,
+            {{serviceName}}::class
+        );
     }
 
     /**
@@ -29,11 +33,6 @@ class {{serviceName}}Provider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(
-            {{serviceName}}Contract::class,
-            {{serviceName}}::class
-        );
-
         if ($this->app->runningInConsole()) {
               // publish config file
               $this->publishes([

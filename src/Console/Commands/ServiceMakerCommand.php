@@ -278,7 +278,7 @@ class ServiceMakerCommand extends Command
         return $this->strServicePath
             . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
             . DIRECTORY_SEPARATOR . self::FOLDER_MODEL
-            . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
+            . DIRECTORY_SEPARATOR . "{$this->strModel}.php";
     }
 
     protected function getServiceMigrationFile()
@@ -286,14 +286,15 @@ class ServiceMakerCommand extends Command
         return $this->strServicePath
             . DIRECTORY_SEPARATOR . self::FOLDER_DATABASE
             . DIRECTORY_SEPARATOR . self::FOLDER_MIGRATION
-            . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
+            . DIRECTORY_SEPARATOR . "create_" . Str::lower($this->strModel) . "_table.php";
     }
+
     protected function getServiceFactoryFile()
     {
         return $this->strServicePath
             . DIRECTORY_SEPARATOR . self::FOLDER_DATABASE
             . DIRECTORY_SEPARATOR . self::FOLDER_FACTORY
-            . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
+            . DIRECTORY_SEPARATOR . "{$this->strModel}Factory.php";
     }
 
     protected function getServiceSkelegon(): array
