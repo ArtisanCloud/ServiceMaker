@@ -6,6 +6,7 @@ use ArtisanCloud\ServiceMaker\Traits\ServiceMakerHelper;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 
 class ServiceMakerCommand extends Command
@@ -17,7 +18,7 @@ class ServiceMakerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'service:make {serviceName} {--S|simple} {--M|model} {--D|driver} ';
+    protected $signature = 'service:make {serviceName} {--s|simple} {--m|model} {--d|driver} ';
 
     /**
      * The console command description.
@@ -29,6 +30,7 @@ class ServiceMakerCommand extends Command
     public string $strServiceName;
     public string $strServicePath;
     public string $strServiceNamespace;
+    public string $strModel;
 
     const FOLDER_CONFIG = 'config';
     const FOLDER_RESOURCE = 'resources';
@@ -70,16 +72,22 @@ class ServiceMakerCommand extends Command
     {
 //        dd($this->arguments());
 //        dd($this->options());
-
         $this->strServiceName = $this->formatServiceName($this->argument('serviceName'));
         $this->strServicePath = $this->createServiceSkeleton($this->strServiceName, $this->getServiceSkelegon());
         $this->strServiceNamespace = $this->getServiceNameSpace($this->strServiceName);
+        $this->strModel = $this->getModel($this->strServiceName);
 
         $this->generateContract();
         $this->generateService();
         $this->generateServiceProvider();
         $this->generateFacade();
-//        $this->option('model') ? null : $this->generateModel();
+        $this->generateConfig();
+        if ($this->option('model')) {
+            $this->generateModel();
+            $this->generateMigration();
+            $this->generateFactory();
+        }
+
 //        $this->option('path') ? null : $this->generateDriver();
 
         return 0;
@@ -94,11 +102,7 @@ class ServiceMakerCommand extends Command
     protected function generateContract(): bool
     {
         $templateName = 'ServiceContract';
-        $serviceTemplate = str_replace(
-            ["{{serviceName}}", "{{serviceNamespace}}"],
-            [$this->strServiceName, $this->strServiceNamespace],
-            $this->getStub($templateName)
-        );
+        $serviceTemplate = $this->generateContentFromStub($templateName);
 
         $filePath = $this->getServiceContractFile();
         $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
@@ -114,11 +118,7 @@ class ServiceMakerCommand extends Command
     protected function generateService(): bool
     {
         $templateName = 'Service';
-        $serviceTemplate = str_replace(
-            ["{{serviceName}}", "{{serviceNamespace}}"],
-            [$this->strServiceName, $this->strServiceNamespace],
-            $this->getStub($templateName)
-        );
+        $serviceTemplate = $this->generateContentFromStub($templateName);
 
         $filePath = $this->getServiceFile();
         $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
@@ -134,11 +134,7 @@ class ServiceMakerCommand extends Command
     protected function generateServiceProvider(): bool
     {
         $templateName = 'ServiceProvider';
-        $serviceTemplate = str_replace(
-            ["{{serviceName}}", "{{serviceNamespace}}"],
-            [$this->strServiceName, $this->strServiceNamespace],
-            $this->getStub($templateName)
-        );
+        $serviceTemplate = $this->generateContentFromStub($templateName);
 
         $filePath = $this->getServiceProviderFile();
         $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
@@ -155,13 +151,25 @@ class ServiceMakerCommand extends Command
     protected function generateFacade(): bool
     {
         $templateName = 'ServiceFacade';
-        $serviceTemplate = str_replace(
-            ["{{serviceName}}", "{{serviceNamespace}}"],
-            [$this->strServiceName, $this->strServiceNamespace],
-            $this->getStub($templateName)
-        );
+        $serviceTemplate = $this->generateContentFromStub($templateName);
 
         $filePath = $this->getServiceFacadeFile();
+        $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
+
+        return $bResult;
+    }
+
+    /**
+     * generate facade.
+     *
+     * @return bool
+     */
+    public function generateConfig()
+    {
+        $templateName = 'Config';
+        $serviceTemplate = $this->generateContentFromStub($templateName);
+
+        $filePath = $this->getServiceConfigFile();
         $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
 
         return $bResult;
@@ -174,8 +182,47 @@ class ServiceMakerCommand extends Command
      */
     protected function generateModel(): bool
     {
-        return true;
+        $templateName = 'Model';
+        $serviceTemplate = $this->generateContentFromStub($templateName);
+
+        $filePath = $this->getServiceModelFile();
+        $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
+
+        return $bResult;
     }
+
+    /**
+     * generate migration.
+     *
+     * @return bool
+     */
+    protected function generateMigration()
+    {
+        $templateName = 'Migration';
+        $serviceTemplate = $this->generateContentFromStub($templateName);
+
+        $filePath = $this->getServiceMigrationFile();
+        $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
+
+        return $bResult;
+    }
+
+    /**
+     * generate factory.
+     *
+     * @return bool
+     */
+    protected function generateFactory()
+    {
+        $templateName = 'Factory';
+        $serviceTemplate = $this->generateContentFromStub($templateName);
+
+        $filePath = $this->getServiceFactoryFile();
+        $bResult = $this->saveServiceTemplateToFile($serviceTemplate, $filePath, $templateName);
+
+        return $bResult;
+    }
+
 
     /**
      * generate driver.
@@ -219,7 +266,37 @@ class ServiceMakerCommand extends Command
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}.php";
     }
 
-    protected function getServiceSkelegon() :array
+    protected function getServiceConfigFile()
+    {
+        return $this->strServicePath
+            . DIRECTORY_SEPARATOR . self::FOLDER_CONFIG
+            . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
+    }
+
+    protected function getServiceModelFile()
+    {
+        return $this->strServicePath
+            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
+            . DIRECTORY_SEPARATOR . self::FOLDER_MODEL
+            . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
+    }
+
+    protected function getServiceMigrationFile()
+    {
+        return $this->strServicePath
+            . DIRECTORY_SEPARATOR . self::FOLDER_DATABASE
+            . DIRECTORY_SEPARATOR . self::FOLDER_MIGRATION
+            . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
+    }
+    protected function getServiceFactoryFile()
+    {
+        return $this->strServicePath
+            . DIRECTORY_SEPARATOR . self::FOLDER_DATABASE
+            . DIRECTORY_SEPARATOR . self::FOLDER_FACTORY
+            . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
+    }
+
+    protected function getServiceSkelegon(): array
     {
         return [
             self::FOLDER_CONFIG,

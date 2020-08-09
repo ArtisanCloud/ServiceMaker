@@ -4,6 +4,7 @@ namespace ArtisanCloud\ServiceMaker\Traits;
 
 use ArtisanCloud\ServiceMaker\Console\Commands\ServiceMakerCommand;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 trait ServiceMakerHelper
 {
@@ -97,6 +98,12 @@ trait ServiceMakerHelper
 
     }
 
+    public function getModel(string $strServiceName): string
+    {
+        $strModel = Str::of($strServiceName)->replaceLast('Service','');
+        return $strModel;
+    }
+
     protected function getServiceFolder(string $strServiceName): string
     {
         $strServicePath = $this->getPublishedServicePath();
@@ -139,6 +146,26 @@ trait ServiceMakerHelper
     protected function getStub(string $class): string
     {
         return File::get(__DIR__ . "/../Console/stubs/{$class}.stub");
+    }
+
+    public function generateContentFromStub(string $strTemplate)
+    {
+        return str_replace(
+            [
+                "{{serviceName}}",
+                "{{serviceNamespace}}",
+                "{{Model}}",
+                "{{model}}",
+            ],
+            [
+                $this->strServiceName,
+                $this->strServiceNamespace,
+                $this->strModel,
+                Str::lower($this->strModel),
+
+            ],
+            $this->getStub($strTemplate)
+        );
     }
 
 
