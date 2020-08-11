@@ -42,7 +42,7 @@ class {{serviceName}}Provider extends ServiceProvider
               // register artisan command
               if (! class_exists('Create{{Model}}Table')) {
                 $this->publishes([
-                  __DIR__ . '/../../database/migrations/create_{{model}}s_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_{{model}}s_table.php'),
+                  __DIR__ . '/../../database/migrations/create_{{model}}s_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_{{model}}s_table.php'),
                   // you can add any number of migrations here
                 ], ['{{Tag}}', '{{Model}}-Migration']);
               }
