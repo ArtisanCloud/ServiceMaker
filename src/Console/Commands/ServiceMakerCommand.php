@@ -34,7 +34,7 @@ class ServiceMakerCommand extends Command
 
     const FOLDER_CONFIG = 'config';
     const FOLDER_RESOURCE = 'resources';
-    const FOLDER_DATABASE = 'databases';
+    const FOLDER_DATABASE = 'database';
     const FOLDER_FACTORY = 'factories';
     const FOLDER_MIGRATION = 'migrations';
     const FOLDER_SEED = 'seeds';
@@ -286,7 +286,7 @@ class ServiceMakerCommand extends Command
         return $this->strServicePath
             . DIRECTORY_SEPARATOR . self::FOLDER_DATABASE
             . DIRECTORY_SEPARATOR . self::FOLDER_MIGRATION
-            . DIRECTORY_SEPARATOR . "create_" . Str::lower($this->strModel) . "_table.php";
+            . DIRECTORY_SEPARATOR . "create_" . Str::lower($this->strModel) . "s_table.php";
     }
 
     protected function getServiceFactoryFile()
