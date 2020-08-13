@@ -7,6 +7,7 @@
 - fix publish domain
 - fix provider stub
 - add global tag for publish
+- add config_folder in config file
 
 # Release Notes for 1.0.3
 
