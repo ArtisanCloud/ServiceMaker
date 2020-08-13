@@ -37,6 +37,11 @@ class {{serviceName}}Provider extends ServiceProvider
               // publish config file
 //              $this->publishes([
 //                  __DIR__ . '/../../config/{{model}}.php' => "/../" . config_path('{{model}}.php'),
+//              ], ['{{Tag}}', '{{Model}}-Config']);
+
+              // publish migration file
+//              $this->publishes([
+//                  __DIR__ . '/../../config/{{model}}.php' => "/../" . config_path('{{model}}.php'),
 //              ], ['{{Tag}}', '{{Model}}-Model']);
 
               // register artisan command
