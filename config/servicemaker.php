@@ -74,5 +74,14 @@ return [
      * If null, the default value will be same as Service Name
      */
     'publish_tag' => null,
+
+    /**
+     * Override default config/file
+     * This will overwrite the package publish tag in general
+     * If null, the default value will be same as Service Name
+     */
+    'config_folder' => null,
+
+
 ];
 

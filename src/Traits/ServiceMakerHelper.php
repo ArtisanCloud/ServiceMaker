@@ -157,6 +157,7 @@ trait ServiceMakerHelper
                 "{{Model}}",
                 "{{model}}",
                 "{{Tag}}",
+                "{{ConfigFolder}}",
             ],
             [
                 $this->strServiceName,
@@ -164,6 +165,7 @@ trait ServiceMakerHelper
                 $this->strModel,
                 Str::lower($this->strModel),
                 config('servicemaker.publish_tag') ?? $this->strModel,
+                config('servicemaker.config_folder') ? config('servicemaker.config_folder').DIRECTORY_SEPARATOR : '',
 
             ],
             $this->getStub($strTemplate)

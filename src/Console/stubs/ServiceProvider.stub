@@ -36,7 +36,7 @@ class {{serviceName}}Provider extends ServiceProvider
         if ($this->app->runningInConsole()) {
               // publish config file
 //              $this->publishes([
-//                  __DIR__ . '/../../config/{{model}}.php' => "/../" . config_path('{{model}}.php'),
+//                  __DIR__ . '/../../config/{{model}}.php' => "/../" . config_path('{{ConfigFolder}}{{model}}.php'),
 //              ], ['{{Tag}}', '{{Model}}-Config']);
 
               // publish migration file
