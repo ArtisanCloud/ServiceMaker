@@ -124,7 +124,7 @@ trait ServiceMakerHelper
 
     protected function getPublishedServicePath(): ?string
     {
-        return config('servicemaker.service_path');
+        return config('servicemaker.service_path') ?? null;
     }
 
     protected function getDefaultServicePath(): string
@@ -134,7 +134,9 @@ trait ServiceMakerHelper
 
     protected function getPublishedServiceNamespace(string $strServiceName): ?string
     {
-        return config('servicemaker.namespace') . '\\' . $strServiceName . '\src';
+        return config('servicemaker.namespace')
+            ? config('servicemaker.namespace') . '\\' . $strServiceName . '\src'
+            : null;
 
     }
 
