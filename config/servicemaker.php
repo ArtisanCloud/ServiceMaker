@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 
 use ArtisanCloud\ServiceMaker\Console\Commands\ServiceMakerCommand as SMSkelegon;
