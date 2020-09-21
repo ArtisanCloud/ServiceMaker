@@ -28,10 +28,8 @@ trait ServiceMakerHelper
         $bResult = $this->createServiceFolder($strServiceFolder);
         if (!$bResult) exit(-1);
 
-        if (!$this->option('simple')) {
-            // create service subfolders
-            $this->createServiceSubFolder($strServiceFolder, $arraySubFolders);
-        }
+        // create service subfolders
+        $this->createServiceSubFolder($strServiceFolder, $arraySubFolders);
 
         return $strServiceFolder;
     }
@@ -102,7 +100,7 @@ trait ServiceMakerHelper
     public function getModel(string $strServiceName): string
     {
         $strModel = Str::of($strServiceName)->replaceLast('Service', '');
-        return $strModel;
+        return $strModel->__toString();
     }
 
     protected function getServiceFolder(string $strServiceName): string
@@ -136,14 +134,14 @@ trait ServiceMakerHelper
     protected function getPublishedServiceNamespace(string $strServiceName): ?string
     {
         return config('servicemaker.namespace')
-            ? config('servicemaker.namespace') . '\\' . $strServiceName . '\src'
+            ? config('servicemaker.namespace') . (!$this->option('simple') ? '\\' . $strServiceName . '\src' : '')
             : null;
 
     }
 
     protected function getDefaultServiceNamespace(string $strServiceName): string
     {
-        return 'App\Services\\' . $strServiceName . '\src';
+        return 'App\Services\\' . $strServiceName . (!$this->option('simple') ? '\src' : '');
     }
 
     protected function getStub(string $class): string
@@ -168,7 +166,7 @@ trait ServiceMakerHelper
                 $this->strModel,
                 Str::lower($this->strModel),
                 config('servicemaker.publish_tag') ?? $this->strModel,
-                config('servicemaker.config_folder') ? config('servicemaker.config_folder').DIRECTORY_SEPARATOR : '',
+                config('servicemaker.config_folder') ? config('servicemaker.config_folder') . DIRECTORY_SEPARATOR : '',
 
             ],
             $this->getStub($strTemplate)
@@ -198,7 +196,8 @@ trait ServiceMakerHelper
         } else {
 
             $strFileDirectory = dirname($filePath);
-            if ($this->createServiceFolder($strFileDirectory)) {
+            $bResult = $this->createServiceFolder($strFileDirectory);
+            if ($bResult) {
                 $bResult = File::put($filePath, $serviceTemplate);
                 if ($bResult) {
                     $this->info("generated {$strTemplateName} at {$filePath}.");
@@ -209,11 +208,9 @@ trait ServiceMakerHelper
                 $this->error("{$filePath}parent folder not exist!");
 
             }
-
-
         }
 
-        return $bResult;
+        return $bResult != false;
     }
 
 

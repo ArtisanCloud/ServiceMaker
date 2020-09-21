@@ -239,7 +239,7 @@ class ServiceMakerCommand extends Command
     protected function getServiceContractFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
+            . (!$this->option('simple') ? DIRECTORY_SEPARATOR . self::FOLDER_SOURCE : '')
             . DIRECTORY_SEPARATOR . self::FOLDER_CONTRACT
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}Contract.php";
     }
@@ -247,14 +247,14 @@ class ServiceMakerCommand extends Command
     protected function getServiceFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
+            . (!$this->option('simple') ? DIRECTORY_SEPARATOR . self::FOLDER_SOURCE : '')
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}.php";
     }
 
     protected function getServiceProviderFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
+            . (!$this->option('simple') ? DIRECTORY_SEPARATOR . self::FOLDER_SOURCE : '')
             . DIRECTORY_SEPARATOR . self::FOLDER_PROVIDER
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}Provider.php";
     }
@@ -262,9 +262,17 @@ class ServiceMakerCommand extends Command
     protected function getServiceFacadeFile(): string
     {
         return $this->strServicePath
-            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
+            . (!$this->option('simple') ? DIRECTORY_SEPARATOR . self::FOLDER_SOURCE : '')
             . DIRECTORY_SEPARATOR . self::FOLDER_FACADE
             . DIRECTORY_SEPARATOR . "{$this->strServiceName}.php";
+    }
+
+    protected function getServiceModelFile()
+    {
+        return $this->strServicePath
+            . (!$this->option('simple') ? DIRECTORY_SEPARATOR . self::FOLDER_SOURCE : '')
+            . DIRECTORY_SEPARATOR . self::FOLDER_MODEL
+            . DIRECTORY_SEPARATOR . "{$this->strModel}.php";
     }
 
     protected function getServiceConfigFile()
@@ -274,13 +282,6 @@ class ServiceMakerCommand extends Command
             . DIRECTORY_SEPARATOR . Str::lower("{$this->strModel}.php");
     }
 
-    protected function getServiceModelFile()
-    {
-        return $this->strServicePath
-            . DIRECTORY_SEPARATOR . self::FOLDER_SOURCE
-            . DIRECTORY_SEPARATOR . self::FOLDER_MODEL
-            . DIRECTORY_SEPARATOR . "{$this->strModel}.php";
-    }
 
     protected function getServiceMigrationFile()
     {
@@ -300,28 +301,44 @@ class ServiceMakerCommand extends Command
 
     protected function getServiceSkelegon(): array
     {
-        return [
-            self::FOLDER_CONFIG,
-            self::FOLDER_DATABASE => [
-                self::FOLDER_FACTORY,
-                self::FOLDER_MIGRATION,
-                self::FOLDER_SEED,
-            ],
-            self::FOLDER_RESOURCE,
-            self::FOLDER_SOURCE => [
+        if ($this->option('simple')) {
+            return [
+                self::FOLDER_RESOURCE,
                 self::FOLDER_CONSOLE,
                 self::FOLDER_EXCEPTION,
-                self::FOLDER_HTTP => [
-                    self::FOLDER_CONTROLLER,
-                    self::FOLDER_MIDDLEWARE,
-                ],
                 self::FOLDER_CONTRACT,
                 self::FOLDER_PROVIDER,
                 self::FOLDER_FACADE,
                 self::FOLDER_MODEL,
                 self::FOLDER_DRIVER,
                 self::FOLDER_CHANNEL,
-            ],
-        ];
+            ];
+
+        } else {
+            return [
+                self::FOLDER_CONFIG,
+                self::FOLDER_DATABASE => [
+                    self::FOLDER_FACTORY,
+                    self::FOLDER_MIGRATION,
+                    self::FOLDER_SEED,
+                ],
+                self::FOLDER_RESOURCE,
+                self::FOLDER_SOURCE => [
+                    self::FOLDER_CONSOLE,
+                    self::FOLDER_EXCEPTION,
+                    self::FOLDER_HTTP => [
+                        self::FOLDER_CONTROLLER,
+                        self::FOLDER_MIDDLEWARE,
+                    ],
+                    self::FOLDER_CONTRACT,
+                    self::FOLDER_PROVIDER,
+                    self::FOLDER_FACADE,
+                    self::FOLDER_MODEL,
+                    self::FOLDER_DRIVER,
+                    self::FOLDER_CHANNEL,
+                ],
+            ];
+        }
+
     }
 }
