@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ArtisanCloud\\ServiceMaker\\": "src"
+            "ArtisanCloud\\ServiceMaker\\": "src/"
         }
     },
     "autoload-dev": {
@@ -24,5 +24,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ArtisanCloud\\ServiceMaker\\ServiceMakerServiceProvider"
+            ]
+        }
     }
 }
